@@ -2,7 +2,7 @@
 
 An interactive GUI for Exploratory Data Analysis (EDA) built with Streamlit. Upload any CSV dataset, inspect metadata, and visualize column distributions dynamically.
 
-**Live Demo:** [Streamlit App](https://titanic-eda-streamlit.streamlit.app)
+**Live Demo:** [Streamlit App](https://titanic-eda-alihaider.streamlit.app/)
 
 ## Features
 
