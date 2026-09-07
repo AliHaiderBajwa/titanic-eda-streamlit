@@ -27,7 +27,6 @@ if uploaded_file is not None:
             if "df" not in st.session_state:
                 st.session_state["df"] = df
                 st.rerun()
-            st.session_state["df"] = df
     except Exception:
         st.error("Invalid CSV file. Please upload a properly formatted CSV.")
 
