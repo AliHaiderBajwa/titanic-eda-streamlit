@@ -79,5 +79,23 @@ if "df" in st.session_state:
         chart_type = "Numerical" if is_numerical else "Categorical"
         st.write(f"**{selected_column}** — Type: {chart_type}")
 
+        fig, ax = plt.subplots(figsize=(10, 5))
+
+        if is_numerical:
+            ax.hist(df[selected_column].dropna(), bins=30, edgecolor="black")
+            ax.set_xlabel(selected_column)
+            ax.set_ylabel("Frequency")
+            ax.set_title(f"Distribution of {selected_column}")
+        else:
+            value_counts = df[selected_column].value_counts()
+            ax.bar(value_counts.index.astype(str), value_counts.values)
+            ax.set_xlabel(selected_column)
+            ax.set_ylabel("Count")
+            ax.set_title(f"Frequency of {selected_column}")
+            plt.xticks(rotation=45, ha="right")
+
+        st.pyplot(fig)
+        plt.close(fig)
+
 else:
     st.info("Upload a CSV file to begin exploration.")
