@@ -24,5 +24,41 @@ if uploaded_file is not None:
 if "df" in st.session_state:
     df = st.session_state["df"]
     st.success(f"Dataset loaded: {df.shape[0]} rows, {df.shape[1]} columns")
+
+    st.subheader("Dataset Preview")
+    st.dataframe(df.head(5))
+
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown("**Dimensions:**")
+        st.write(f"Rows: {df.shape[0]} | Columns: {df.shape[1]}")
+
+    st.markdown("**Column Data Types:**")
+    dtypes_df = pd.DataFrame({
+        "Column": df.columns,
+        "Data Type": [str(df[col].dtype) for col in df.columns]
+    })
+    st.dataframe(dtypes_df, use_container_width=True)
+
+    st.markdown("**Missing Values:**")
+    missing_df = pd.DataFrame({
+        "Column": df.columns,
+        "Missing Count": [df[col].isnull().sum() for col in df.columns]
+    })
+    st.dataframe(missing_df, use_container_width=True)
+
+    st.markdown("**Statistical Summary (Numerical Columns):**")
+    num_cols = df.select_dtypes(include="number").columns.tolist()
+    if num_cols:
+        stats_df = pd.DataFrame({
+            "Column": num_cols,
+            "Mean": [df[col].mean() for col in num_cols],
+            "Median": [df[col].median() for col in num_cols],
+            "Min": [df[col].min() for col in num_cols],
+            "Max": [df[col].max() for col in num_cols]
+        })
+        st.dataframe(stats_df, use_container_width=True)
+    else:
+        st.write("No numerical columns found.")
 else:
     st.info("Upload a CSV file to begin exploration.")
