@@ -12,7 +12,17 @@ with st.sidebar:
     uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 
 if uploaded_file is not None:
-    df = pd.read_csv(uploaded_file)
-    st.write("Dataset loaded successfully.")
+    try:
+        df = pd.read_csv(uploaded_file)
+        if df.empty:
+            st.warning("The uploaded file contains no data.")
+        else:
+            st.session_state["df"] = df
+    except Exception:
+        st.error("Invalid CSV file. Please upload a properly formatted CSV.")
+
+if "df" in st.session_state:
+    df = st.session_state["df"]
+    st.success(f"Dataset loaded: {df.shape[0]} rows, {df.shape[1]} columns")
 else:
     st.info("Upload a CSV file to begin exploration.")
