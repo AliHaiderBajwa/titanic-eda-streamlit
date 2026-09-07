@@ -11,12 +11,22 @@ with st.sidebar:
     st.header("Controls")
     uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 
+    if "df" in st.session_state:
+        selected_column = st.selectbox(
+            "Select a column to visualize",
+            st.session_state["df"].columns.tolist()
+        )
+        st.session_state["selected_column"] = selected_column
+
 if uploaded_file is not None:
     try:
         df = pd.read_csv(uploaded_file)
         if df.empty:
             st.warning("The uploaded file contains no data.")
         else:
+            if "df" not in st.session_state:
+                st.session_state["df"] = df
+                st.rerun()
             st.session_state["df"] = df
     except Exception:
         st.error("Invalid CSV file. Please upload a properly formatted CSV.")
@@ -60,5 +70,14 @@ if "df" in st.session_state:
         st.dataframe(stats_df, use_container_width=True)
     else:
         st.write("No numerical columns found.")
+
+    if "selected_column" in st.session_state:
+        selected_column = st.session_state["selected_column"]
+        st.subheader("Visualization")
+
+        is_numerical = pd.api.types.is_numeric_dtype(df[selected_column])
+        chart_type = "Numerical" if is_numerical else "Categorical"
+        st.write(f"**{selected_column}** — Type: {chart_type}")
+
 else:
     st.info("Upload a CSV file to begin exploration.")
